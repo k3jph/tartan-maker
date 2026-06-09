@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tartan-maker"
+version = "0.1.0"
+description = "Define, validate, render, and export tartan designs."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "James Howard" }
+]
+dependencies = [
+  "typer>=0.12",
+  "pyyaml>=6.0",
+  "webcolors>=1.13",
+]
+
+[project.optional-dependencies]
+png = ["cairosvg>=2.7"]
+spdlog = ["spdlog>=2.0"]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+  "mypy>=1.10",
+]
+
+[project.scripts]
+tartan-maker = "tartan_maker.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tartan_maker"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
