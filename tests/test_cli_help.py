@@ -32,7 +32,7 @@ def test_version_option():
     result = CliRunner().invoke(app, ["--version"], color=False)
 
     assert result.exit_code == 0
-    assert result.output == "tartan-maker 0.2.6\n"
+    assert result.output == "tartan-maker 0.9.0\n"
 
 
 def test_top_level_help_mentions_version():
