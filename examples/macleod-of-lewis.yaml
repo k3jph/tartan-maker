@@ -1,0 +1,44 @@
+# MacLeod of Lewis
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=2630
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: K4Y8K16R4K16Y8R4Y48K4
+#   Pallet: K=101010BLACK;R=C80000RED;Y=E8C000YELLOW;
+#
+# The supplied count is encoded as a symmetrical half-sett with explicit pivots.
+# tartan-maker compiles this internally to a direct/full repeat before rendering.
+
+name: MacLeod of Lewis
+sett_type: symmetrical
+
+colors:
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+  Y:
+    name: Yellow
+    color: "#E8C000"
+    srt:
+      code: Y
+      name: YELLOW
+
+sett: "K/4 Y8 K16 R4 K16 Y8 R4 Y48 K/4"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"

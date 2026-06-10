@@ -1,0 +1,44 @@
+# Black Watch / Government
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=277
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: DB44K4DB4K4DB4K32G32K4G32K32DB32K4DB4
+#   Pallet: K=101010BLACK; DB=202060DARK BLUE; G=006818GREEN;
+#
+# The supplied count is encoded as a symmetrical half-sett with explicit pivots.
+# tartan-maker compiles this internally to a direct/full repeat before rendering.
+
+name: Black Watch / Government
+sett_type: symmetrical
+
+colors:
+  DB:
+    name: Dark Blue
+    color: "#202060"
+    srt:
+      code: DB
+      name: DARK BLUE
+  G:
+    name: Green
+    color: "#006818"
+    srt:
+      code: G
+      name: GREEN
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+
+sett: "DB/44 K4 DB4 K4 DB4 K32 G32 K4 G32 K32 DB32 K4 DB/4"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"
