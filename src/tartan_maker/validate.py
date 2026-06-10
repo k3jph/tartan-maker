@@ -5,11 +5,78 @@ from __future__ import annotations
 from .model import SettType, Stripe, TartanSpec, ValidationIssue
 
 
-def visual_stripes(spec: TartanSpec) -> list[Stripe]:
-    """Return the stripe sequence used for rendering."""
+def _split_pivot(stripe: Stripe) -> tuple[Stripe, Stripe]:
+    """Split a pivot stripe across the repeat boundary.
+
+    Symmetrical SRT notation gives a reflective half-sett. For rendering, that
+    half-sett is compiled into a direct/full repeat. The first pivot lies on the
+    pattern boundary, so half of it appears at the beginning of the direct repeat
+    and half appears at the end.
+
+    Odd pivot counts cannot split evenly into integer thread counts. In that case
+    the leading side receives the smaller half and the trailing side receives the
+    larger half, preserving the original total.
+    """
+    leading = stripe.count // 2
+    trailing = stripe.count - leading
+    return (
+        Stripe(stripe.color, leading, pivot=False),
+        Stripe(stripe.color, trailing, pivot=False),
+    )
+
+
+def expand_symmetrical_sett(stripes: list[Stripe]) -> list[Stripe]:
+    """Compile a symmetrical half-sett into a direct/full repeat.
+
+    The returned sequence contains no pivot markers and can be rendered by the
+    same direct/asymmetrical renderer used for full setts.
+
+    Given:
+
+        A/10 B20 C/6
+
+    the expanded direct repeat is:
+
+        A5 B20 C6 B20 A5
+
+    More generally:
+
+        first_pivot/2 + interior + last_pivot + reverse(interior) + first_pivot/2
+    """
+    if len(stripes) < 2:
+        return list(stripes)
+
+    first = stripes[0]
+    last = stripes[-1]
+    interior = [Stripe(s.color, s.count, pivot=False) for s in stripes[1:-1]]
+    first_leading, first_trailing = _split_pivot(first)
+
+    expanded: list[Stripe] = []
+    if first_leading.count:
+        expanded.append(first_leading)
+    expanded.extend(interior)
+    expanded.append(Stripe(last.color, last.count, pivot=False))
+    expanded.extend(reversed(interior))
+    if first_trailing.count:
+        expanded.append(first_trailing)
+
+    return expanded
+
+
+def expand_to_direct_repeat(spec: TartanSpec) -> list[Stripe]:
+    """Compile any tartan spec into the direct/full repeat used by renderers.
+
+    Asymmetrical setts are already direct repeats. Symmetrical setts are first
+    expanded into direct repeats so the SVG renderer only has one rendering path.
+    """
     if spec.sett_type == SettType.ASYMMETRICAL:
-        return list(spec.sett)
-    return list(spec.sett) + list(reversed(spec.sett[1:-1]))
+        return [Stripe(s.color, s.count, pivot=False) for s in spec.sett]
+    return expand_symmetrical_sett(spec.sett)
+
+
+def visual_stripes(spec: TartanSpec) -> list[Stripe]:
+    """Backward-compatible alias for expand_to_direct_repeat()."""
+    return expand_to_direct_repeat(spec)
 
 
 def visual_repeat(spec: TartanSpec) -> int:

@@ -8,6 +8,7 @@ from typing import Optional
 import typer
 import yaml
 
+from ._version import __version__
 from .colors import normalize_color
 from .errors import TartanMakerError
 from .inspect import inspect_spec
@@ -17,27 +18,58 @@ from .render_svg import write_svg
 from .sett import parse_sett_string, stripes_to_yaml_pairs
 from .spec import load_spec
 from .srt import to_srt_block, to_srt_pallet, to_srt_threadcount
-from .validate import raise_for_errors, validate_spec
+from .validate import validate_spec
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer(
+    name="tartan-maker",
+    no_args_is_help=True,
+    add_completion=False,
+    rich_markup_mode=None,
+    pretty_exceptions_enable=False,
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
+
+@app.callback(invoke_without_command=True)
+def main(
+    version: bool = typer.Option(
+        False,
+        "--version",
+        help="Show the version and exit.",
+        is_eager=True,
+    ),
+) -> None:
+    """Define, validate, render, and export tartan designs."""
+    if version:
+        typer.echo(f"tartan-maker {__version__}")
+        raise typer.Exit()
 
 
-def _logger(log_level: str, log_backend: str, log_file: Optional[Path]):
+def _logger(log_level: str, log_file: Optional[Path]):
     return make_logger(
-        backend=log_backend,
         level=log_level,
         log_file=str(log_file) if log_file else None,
     )
 
 
-def _load_validated(path: Path, *, log_level: str, log_backend: str, log_file: Optional[Path]):
-    logger = _logger(log_level, log_backend, log_file)
+def _log_exception(
+    exc: TartanMakerError,
+    *,
+    log_level: str = "error",
+    log_file: Optional[Path] = None,
+) -> None:
+    logger = _logger(log_level, log_file)
+    logger.error(str(exc))
+
+
+def _load_validated(path: Path, *, log_level: str, log_file: Optional[Path]):
+    logger = _logger(log_level, log_file)
     logger.info(f"Reading tartan spec: {path}")
     spec = load_spec(path)
     issues = validate_spec(spec)
     for issue in issues:
         getattr(logger, issue.severity)(issue.message)
-    raise_for_errors(issues)
+    if any(issue.severity == "error" for issue in issues):
+        raise typer.Exit(1)
     return spec
 
 
@@ -52,13 +84,12 @@ def render(
     png_width: int | None = typer.Option(None, "--png-width"),
     png_height: int | None = typer.Option(None, "--png-height"),
     png_scale: float | None = typer.Option(None, "--png-scale"),
-    log_level: str = typer.Option("warning", "--log-level"),
-    log_backend: str = typer.Option("auto", "--log-backend"),
+    log_level: str = typer.Option("error", "--log-level"),
     log_file: Path | None = typer.Option(None, "--log-file"),
 ) -> None:
     """Render a tartan to SVG or PNG."""
     try:
-        spec = _load_validated(input_file, log_level=log_level, log_backend=log_backend, log_file=log_file)
+        spec = _load_validated(input_file, log_level=log_level, log_file=log_file)
         if size is not None or weave is not None or css_classes is not None:
             from dataclasses import replace
             from .model import RenderOptions
@@ -80,7 +111,7 @@ def render(
         else:
             raise typer.BadParameter("Format must be svg or png")
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc, log_level=log_level, log_file=log_file)
         raise typer.Exit(1) from exc
 
 
@@ -91,13 +122,12 @@ def srt(
     rotate_asymmetrical: bool = typer.Option(False, "--rotate-asymmetrical"),
     pallet_only: bool = typer.Option(False, "--pallet-only"),
     threadcount_only: bool = typer.Option(False, "--threadcount-only"),
-    log_level: str = typer.Option("warning", "--log-level"),
-    log_backend: str = typer.Option("auto", "--log-backend"),
+    log_level: str = typer.Option("error", "--log-level"),
     log_file: Path | None = typer.Option(None, "--log-file"),
 ) -> None:
     """Generate SRT-compatible pallet and threadcount fields."""
     try:
-        spec = _load_validated(input_file, log_level=log_level, log_backend=log_backend, log_file=log_file)
+        spec = _load_validated(input_file, log_level=log_level, log_file=log_file)
         if pallet_only and threadcount_only:
             raise typer.BadParameter("Use at most one of --pallet-only or --threadcount-only")
         if pallet_only:
@@ -111,19 +141,25 @@ def srt(
         else:
             typer.echo(text)
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc, log_level=log_level, log_file=log_file)
         raise typer.Exit(1) from exc
 
 
 @app.command()
 def inspect(
     input_file: Path = typer.Argument(..., exists=True, readable=True),
+    log_level: str = typer.Option("error", "--log-level"),
+    log_file: Path | None = typer.Option(None, "--log-file"),
 ) -> None:
     """Inspect and validate a tartan spec."""
     try:
-        typer.echo(inspect_spec(load_spec(input_file)))
+        spec = load_spec(input_file)
+        logger = _logger(log_level, log_file)
+        for issue in validate_spec(spec):
+            getattr(logger, issue.severity)(issue.message)
+        typer.echo(inspect_spec(spec))
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc, log_level=log_level, log_file=log_file)
         raise typer.Exit(1) from exc
 
 
@@ -134,7 +170,7 @@ def parse_sett(value: str) -> None:
         rows = stripes_to_yaml_pairs(parse_sett_string(value))
         typer.echo(yaml.safe_dump({"sett": rows}, sort_keys=False).rstrip())
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc)
         raise typer.Exit(1) from exc
 
 
@@ -144,7 +180,7 @@ def color_command(value: str) -> None:
     try:
         typer.echo(normalize_color(value))
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc)
         raise typer.Exit(1) from exc
 
 
@@ -182,7 +218,7 @@ def normalize(
         else:
             typer.echo(text.rstrip())
     except TartanMakerError as exc:
-        typer.echo(f"Error: {exc}", err=True)
+        _log_exception(exc)
         raise typer.Exit(1) from exc
 
 if __name__ == "__main__":

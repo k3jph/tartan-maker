@@ -1,0 +1,87 @@
+# Royal Stewart
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=3958
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: R144B16K24Y8K8WW8K8G32R16K8R8WW8
+#   Pallet: R=C80000RED;DR=880000DARK RED;RB=1C0070ROYAL BLUE;K=101010BLACK;MY=D09800M YELLOW;DW=B8B8B8OFF WHITE;G=006818GREEN;WW=FCFCFCWILSON WHITE;Y=E8C000YELLOW;B=2C2C80BLUE;
+#
+# The supplied count is encoded as a symmetrical half-sett with explicit pivots.
+# tartan-maker compiles this internally to a direct/full repeat before rendering.
+# The SRT pallet includes additional registered colors not used by this threadcount.
+
+name: Royal Stewart
+sett_type: symmetrical
+
+colors:
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+  DR:
+    name: Dark Red
+    color: "#880000"
+    srt:
+      code: DR
+      name: DARK RED
+  RB:
+    name: Royal Blue
+    color: "#1C0070"
+    srt:
+      code: RB
+      name: ROYAL BLUE
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+  MY:
+    name: M Yellow
+    color: "#D09800"
+    srt:
+      code: MY
+      name: M YELLOW
+  DW:
+    name: Off White
+    color: "#B8B8B8"
+    srt:
+      code: DW
+      name: OFF WHITE
+  G:
+    name: Green
+    color: "#006818"
+    srt:
+      code: G
+      name: GREEN
+  WW:
+    name: Wilson White
+    color: "#FCFCFC"
+    srt:
+      code: WW
+      name: WILSON WHITE
+  Y:
+    name: Yellow
+    color: "#E8C000"
+    srt:
+      code: Y
+      name: YELLOW
+  B:
+    name: Blue
+    color: "#2C2C80"
+    srt:
+      code: B
+      name: BLUE
+
+sett: "R/144 B16 K24 Y8 K8 WW8 K8 G32 R16 K8 R8 WW/8"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"

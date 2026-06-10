@@ -10,6 +10,8 @@ The package treats a tartan as structured data: a palette, a threadcount, and a 
 pip install -e .
 ```
 
+The CLI uses `spdlog` for logging; it is installed as a required dependency.
+
 For optional PNG output:
 
 ```bash
@@ -63,3 +65,14 @@ tartan-maker color darkred
 ## Design rule
 
 SVG is the canonical rendering format. PNG output is generated from SVG output. There is no separate raster drawing engine.
+
+## 0.2.1 renderer note
+
+Version 0.2.1 generates warp and weft rectangles explicitly. Earlier output reused the horizontal threadcount group with a 90-degree rotation for the vertical direction, which could reverse or offset the stripe sequence for non-palindromic setts. The SVG renderer now emits separate `weftThreadcounts` and `warpThreadcounts` groups.
+
+Generated SVGs include an XML comment identifying `tartan-maker` as the generator. PNG exports are still derived from SVG and include PNG `tEXt` metadata chunks for `Software` and `Description`.
+
+
+## 0.2.1 orientation note
+
+Version 0.2.1 removes the experimental axis-reversal orientation compensation introduced in 0.2.1/0.2.1. The renderer now draws direct/full setts in supplied order on both axes: top-to-bottom for weft and left-to-right for warp.

@@ -1,10 +1,10 @@
-"""Small logging facade with optional spdlog backend."""
+"""Logging facade backed by spdlog."""
 
 from __future__ import annotations
 
-import logging as py_logging
-import sys
-from typing import Protocol
+from typing import Any, Protocol
+
+import spdlog  # type: ignore[import-not-found]
 
 
 class Logger(Protocol):
@@ -14,56 +14,87 @@ class Logger(Protocol):
     def error(self, message: str) -> None: ...
 
 
-class NullLogger:
-    def debug(self, message: str) -> None: pass
-    def info(self, message: str) -> None: pass
-    def warning(self, message: str) -> None: pass
-    def error(self, message: str) -> None: pass
+LOGGER_NAME = "tartan-maker"
+_LOGGERS: dict[str, Any] = {}
+
+_LEVELS = {
+    "trace": spdlog.LogLevel.TRACE,
+    "debug": spdlog.LogLevel.DEBUG,
+    "info": spdlog.LogLevel.INFO,
+    "warning": spdlog.LogLevel.WARN,
+    "warn": spdlog.LogLevel.WARN,
+    "error": spdlog.LogLevel.ERR,
+    "critical": spdlog.LogLevel.CRITICAL,
+    "off": spdlog.LogLevel.OFF,
+}
 
 
-def make_python_logger(name: str, *, level: str, log_file: str | None) -> Logger:
-    logger = py_logging.getLogger(name)
-    logger.handlers.clear()
-    logger.propagate = False
-    logger.setLevel(getattr(py_logging, level.upper()))
-    handler: py_logging.Handler
-    if log_file:
-        handler = py_logging.FileHandler(log_file)
-    else:
-        handler = py_logging.StreamHandler(sys.stderr)
-    handler.setFormatter(py_logging.Formatter("[%(levelname)s] %(message)s"))
-    logger.addHandler(handler)
+class SpdlogLogger:
+    """Tiny adapter around spdlog's Python bindings."""
+
+    def __init__(self, logger: Any) -> None:
+        self._logger = logger
+
+    def debug(self, message: str) -> None:
+        self._logger.debug(message)
+
+    def info(self, message: str) -> None:
+        self._logger.info(message)
+
+    def warning(self, message: str) -> None:
+        self._logger.warn(message)
+
+    def error(self, message: str) -> None:
+        self._logger.error(message)
+
+
+def _normalize_level(level: str) -> int:
+    normalized = level.lower()
+    try:
+        return _LEVELS[normalized]
+    except KeyError as exc:
+        valid = ", ".join(key for key in _LEVELS if key != "warn")
+        raise ValueError(f"Invalid log level {level!r}; expected one of: {valid}") from exc
+
+
+def _registered_logger(name: str) -> Any | None:
+    """Return an existing spdlog logger without creating a suffixed duplicate."""
+    if name in _LOGGERS:
+        return _LOGGERS[name]
+
+    get_logger = getattr(spdlog, "get", None)
+    if get_logger is None:
+        return None
+    try:
+        logger = get_logger(name)
+    except Exception:
+        return None
+    if logger is not None:
+        _LOGGERS[name] = logger
     return logger
 
 
-def make_spdlog_logger(name: str, *, level: str, log_file: str | None) -> Logger:
-    # The exact Python wrapper API can vary; keep it isolated here.
-    import spdlog  # type: ignore[import-not-found]
-
+def _create_logger(name: str, log_file: str | None) -> Any:
     if log_file:
-        logger = spdlog.FileLogger(name, log_file)
-    else:
-        logger = spdlog.ConsoleLogger(name)
-    if hasattr(logger, "set_level"):
-        logger.set_level(level)
-    return logger
+        return spdlog.FileLogger(name, log_file)
+    return spdlog.ConsoleLogger(name, False, False, False)
 
 
 def make_logger(
-    name: str = "tartan-maker",
+    name: str = LOGGER_NAME,
     *,
-    backend: str = "auto",
     level: str = "warning",
     log_file: str | None = None,
 ) -> Logger:
-    """Create a logger using Python logging or optional spdlog."""
-    backend = backend.lower()
-    if backend == "none":
-        return NullLogger()
-    if backend in {"auto", "spdlog"}:
-        try:
-            return make_spdlog_logger(name, level=level, log_file=log_file)
-        except Exception:
-            if backend == "spdlog":
-                raise
-    return make_python_logger(name, level=level, log_file=log_file)
+    """Return a process-global spdlog-backed logger.
+
+    The spdlog registry requires logger names to be unique. Reusing the
+    registered logger prevents output such as ``[tartan-maker-1]`` when CLI
+    code asks for the logger more than once in the same process.
+    """
+    logger = _registered_logger(name)
+    if logger is None:
+        logger = _create_logger(name, log_file)
+        _LOGGERS[name] = logger
+    logger.set_level(_normalize_level(level))
+    return SpdlogLogger(logger)

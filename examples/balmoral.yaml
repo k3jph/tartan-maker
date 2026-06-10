@@ -1,0 +1,50 @@
+# Balmoral (Original)
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=182
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: LN10R6LN48DN14K12LN6DN6LN6DN22LN12K6LN6R6
+#   Pallet: K=101010BLACK;DN=5C5C5CDARK GREY;LN=C0C0C0LIGHT GRAY;R=C80000RED;
+#
+# The supplied count is encoded as a symmetrical half-sett with explicit pivots.
+# tartan-maker compiles this internally to a direct/full repeat before rendering.
+
+name: Balmoral (Original)
+sett_type: symmetrical
+
+colors:
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+  DN:
+    name: Dark Grey
+    color: "#5C5C5C"
+    srt:
+      code: DN
+      name: DARK GREY
+  LN:
+    name: Light Gray
+    color: "#C0C0C0"
+    srt:
+      code: LN
+      name: LIGHT GRAY
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+
+sett: "LN/10 R6 LN48 DN14 K12 LN6 DN6 LN6 DN22 LN12 K6 LN6 R/6"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"

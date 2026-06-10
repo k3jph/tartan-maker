@@ -1,0 +1,62 @@
+# Buchanan
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=414
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: B18G46K6B18K6Y40K6Y40K6B18K6R40W6R40K6B18K6G46
+#   Pallet: K=101010BLACK;B=2C2C80BLUE;G=006818GREEN;R=C80000RED;W=E0E0E0WHITE;Y=E8C000YELLOW;
+#
+# The supplied count is encoded as an asymmetrical direct/full sett.
+# No pivot markers are used for asymmetrical setts.
+
+name: Buchanan
+sett_type: asymmetrical
+
+colors:
+  B:
+    name: Blue
+    color: "#2C2C80"
+    srt:
+      code: B
+      name: BLUE
+  G:
+    name: Green
+    color: "#006818"
+    srt:
+      code: G
+      name: GREEN
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+  W:
+    name: White
+    color: "#E0E0E0"
+    srt:
+      code: W
+      name: WHITE
+  Y:
+    name: Yellow
+    color: "#E8C000"
+    srt:
+      code: Y
+      name: YELLOW
+
+sett: "B18 G46 K6 B18 K6 Y40 K6 Y40 K6 B18 K6 R40 W6 R40 K6 B18 K6 G46"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"

@@ -1,0 +1,38 @@
+# Rob Roy MacGregor
+#
+# Reference/example encoding for tartan-maker.
+# This is a published tartan, not an original design and not a filing draft.
+#
+# Source: Scottish Register of Tartans
+#   https://www.tartanregister.gov.uk/tartanDetails?ref=3516
+#
+# Based on threadcount and pallet values supplied by the user:
+#   Threadcount: K172R172
+#   Pallet: K=101010BLACK;R=C80000RED;
+#
+# The supplied count is encoded as a symmetrical half-sett with explicit pivots.
+# tartan-maker compiles this internally to a direct/full repeat before rendering.
+
+name: Rob Roy MacGregor
+sett_type: symmetrical
+
+colors:
+  K:
+    name: Black
+    color: "#101010"
+    srt:
+      code: K
+      name: BLACK
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+
+sett: "K/172 R/172"
+
+render:
+  size: 792
+  weave: true
+  preserve_aspect_ratio: "xMidYMid meet"
