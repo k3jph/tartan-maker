@@ -1,8 +1,21 @@
 # tartan-maker
 
-`tartan-maker` is a small Python package and command-line utility for turning tartan specifications into useful artifacts: validated YAML, SVG artwork, PNG exports, and Scottish Register of Tartans-style pallet/threadcount fields.
+[![CI](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml/badge.svg)](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml)
+[![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://k3jph.github.io/tartan-maker/)
+[![PyPI](https://img.shields.io/pypi/v/tartan-maker.svg)](https://pypi.org/project/tartan-maker/)
+[![Python versions](https://img.shields.io/pypi/pyversions/tartan-maker.svg)](https://pypi.org/project/tartan-maker/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-46a9ff.svg)](https://docs.astral.sh/ruff/)
 
-It is intentionally **SVG-first**. The renderer builds a clean SVG from structured tartan data, and PNG output is derived from that SVG. There is one rendering model, one source of truth, and no separate raster engine drifting out of sync.
+`tartan-maker` is a Python package and command-line utility for defining, validating, rendering, and exporting tartan designs from YAML.
+
+It is deliberately **SVG-first**: the package builds clean SVG from structured tartan data, and PNG output is derived from that same SVG. One rendering model, one source of truth, no separate raster engine slowly wandering off into the moor.
+
+<p align="center">
+  <img src="docs/assets/examples/black-watch-government.svg" alt="Black Watch / Government tartan preview" width="30%">
+  <img src="docs/assets/examples/buchanan.svg" alt="Buchanan tartan preview" width="30%">
+  <img src="docs/assets/examples/royal-stewart.svg" alt="Royal Stewart tartan preview" width="30%">
+</p>
 
 ## What it does
 
@@ -12,7 +25,7 @@ It is intentionally **SVG-first**. The renderer builds a clean SVG from structur
 - Validates palettes, threadcounts, pivots, unused colors, and repeat sizes.
 - Renders SVG with separate warp and weft threadcount groups.
 - Exports PNG through the optional CairoSVG backend.
-- Emits SRT-compatible `Pallet:` and `Threadcount:` fields.
+- Emits Scottish Register of Tartans-style `Pallet:` and `Threadcount:` fields.
 - Resolves web color names and hex colors.
 - Uses `spdlog` for CLI logging.
 
@@ -56,22 +69,10 @@ Inspect a tartan:
 tartan-maker inspect examples/buchanan.yaml
 ```
 
-Generate Scottish Register of Tartans-style fields:
+Generate SRT-style fields:
 
 ```bash
 tartan-maker srt examples/macleod-of-lewis.yaml
-```
-
-Parse compact sett notation into YAML pair form:
-
-```bash
-tartan-maker parse-sett "B/24 W4 B24 R2 K24 G24 W/2"
-```
-
-Resolve a color:
-
-```bash
-tartan-maker color darkred
 ```
 
 Check the installed version:
@@ -80,54 +81,21 @@ Check the installed version:
 tartan-maker --version
 ```
 
-## YAML format
+## Documentation
 
-A tartan spec has four main parts:
+The project site is built with MkDocs and published through GitHub Pages:
 
-```yaml
-name: Buchanan
-sett_type: asymmetrical
-
-colors:
-  B:
-    name: Blue
-    color: "#2C2C80"
-    srt:
-      code: B
-      name: BLUE
-  G:
-    name: Green
-    color: "#006818"
-    srt:
-      code: G
-      name: GREEN
-  K:
-    name: Black
-    color: "#101010"
-    srt:
-      code: K
-      name: BLACK
-
-sett: "B18 G46 K6 B18 K6 Y40 K6 Y40 K6 B18 K6 R40 W6 R40 K6 B18 K6 G46"
-
-render:
-  size: 792
-  weave: true
-  preserve_aspect_ratio: "xMidYMid meet"
+```bash
+pip install -e ".[png]"
+pip install mkdocs mkdocs-material mkdocstrings[python]
+mkdocs serve
 ```
 
-### Sett types
-
-`tartan-maker` recognizes two sett types:
-
-- `symmetrical`: encode the half-sett and mark both pivots with `/`, for example `DB/44 ... DB/4`.
-- `asymmetrical`: encode the full/direct repeat in order, with no pivot markers.
-
-Symmetrical setts are compiled internally into a direct/full repeat before rendering. Asymmetrical setts are already direct repeats.
+The docs workflow runs the unit tests on every commit and publishes the site on pushes to `main`.
 
 ## Examples
 
-The `examples/` directory contains reference encodings of published tartans used for testing and demonstration:
+The `examples/` directory contains reference encodings used for testing and demonstration:
 
 | File | Sett type | Source |
 | --- | --- | --- |
@@ -138,53 +106,7 @@ The `examples/` directory contains reference encodings of published tartans used
 | `royal-stewart.yaml` | symmetrical | Scottish Register of Tartans ref. 3958 |
 | `macleod-of-lewis.yaml` | symmetrical | Scottish Register of Tartans ref. 2630 |
 
-These examples are not original design filings. They are practical sample inputs for exercising the parser, validator, renderer, and SRT exporter.
-
-## Commands
-
-```text
-Usage: tartan-maker [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --version   Show the version and exit.
-  -h, --help  Show this message and exit.
-
-Commands:
-  render      Render a tartan to SVG or PNG.
-  srt         Generate SRT-compatible pallet and threadcount fields.
-  inspect     Inspect and validate a tartan spec.
-  parse-sett  Parse compact sett notation and print YAML pair form.
-  color       Resolve a web color name or hex value to #RRGGBB.
-  normalize   Print a normalized YAML view of a tartan spec.
-```
-
-## Rendering model
-
-The rendering pipeline is:
-
-```text
-YAML sett -> parse -> validate -> compile to direct repeat -> SVG -> PNG
-```
-
-SVG output contains separate `weftThreadcounts` and `warpThreadcounts` groups. That matters for asymmetrical setts: the vertical direction is not produced by rotating the horizontal group, so non-palindromic stripe sequences keep their intended order.
-
-Generated SVGs include a generator comment. PNG exports include `tEXt` metadata chunks for `Software` and `Description`.
-
-## Logging
-
-The CLI uses `spdlog` directly. Validation warnings are quiet by default because normal rendering should not be noisy.
-
-Show warnings:
-
-```bash
-tartan-maker render examples/royal-stewart.yaml -o royal-stewart.svg --log-level warning
-```
-
-Write logs to a file:
-
-```bash
-tartan-maker inspect examples/buchanan.yaml --log-file tartan-maker.log --log-level info
-```
+These examples are not original design filings. They are practical sample inputs for exercising the parser, validator, renderer, and exporter.
 
 ## Development
 
@@ -194,7 +116,7 @@ Run the tests:
 python -m pytest -q
 ```
 
-Run the formatter/linter if installed:
+Run the linter if installed:
 
 ```bash
 ruff check .
