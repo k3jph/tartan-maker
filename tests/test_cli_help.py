@@ -1,5 +1,6 @@
 from typer.testing import CliRunner
 
+from tartan_maker._version import __version__
 from tartan_maker.cli import app
 
 
@@ -32,7 +33,7 @@ def test_version_option():
     result = CliRunner().invoke(app, ["--version"], color=False)
 
     assert result.exit_code == 0
-    assert result.output == "tartan-maker 0.9.0\n"
+    assert result.output == f"tartan-maker {__version__}\n"
 
 
 def test_top_level_help_mentions_version():
