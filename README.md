@@ -1,5 +1,8 @@
 # tartan-maker
 
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/k3jph/stops-el)
+[![Homepage](https://img.shields.io/badge/homepage-jameshoward.us-1a5bb0.svg?style=for-the-badge&labelColor=f3dd78)](https://jameshoward.us)
+
 [![CI](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml/badge.svg)](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml)
 [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://k3jph.github.io/tartan-maker/)
 [![PyPI](https://img.shields.io/pypi/v/tartan-maker.svg)](https://pypi.org/project/tartan-maker/)
