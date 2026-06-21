@@ -2,6 +2,19 @@
 
 All notable changes to `tartan-maker` are collected here.
 
+## 0.9.1 - 2026-06-20
+
+### Added
+
+- Added a MkDocs documentation site with installation, quick-start, YAML-format, CLI, examples, development, and changelog pages.
+- Added rendered SVG previews for all bundled example tartans.
+- Added GitHub Actions CI for the supported Python versions.
+- Added automated GitHub Pages builds and deployment from `main`.
+
+### Changed
+
+- Refreshed the README with project badges, a shorter package overview, and links to the documentation site.
+
 ## 0.9.0 - release preparation
 
 This release prepares `tartan-maker` for a more public Python-package shape.

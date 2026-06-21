@@ -1,38 +1,66 @@
-# Example tartans
+# Examples
 
-The `examples/` directory contains reference YAML files for published tartans. They are included so renderer behavior can be exercised against familiar symmetrical and asymmetrical setts.
+The repository includes six example tartan specifications in `examples/`.
 
-## Included files
+These files are sample inputs for the parser, validator, renderer, and SRT exporter. They are not original design filings.
 
-| File | Name | Sett type | SRT reference |
-| --- | --- | --- | --- |
-| `black-watch-government.yaml` | Black Watch / Government | symmetrical | 277 |
-| `balmoral-original.yaml` | Balmoral (Original) | symmetrical | 182 |
-| `rob-roy-macgregor.yaml` | Rob Roy MacGregor | symmetrical | 3516 |
-| `buchanan.yaml` | Buchanan | asymmetrical | 414 |
-| `royal-stewart.yaml` | Royal Stewart | symmetrical | 3958 |
-| `macleod-of-lewis.yaml` | MacLeod of Lewis | symmetrical | 2630 |
+## Black Watch / Government
 
-## Why these examples?
-
-- Black Watch is a compact, familiar symmetrical sett.
-- Balmoral exercises gray-scale palette handling and explicit pivots.
-- Rob Roy MacGregor is intentionally simple and large-scale.
-- Buchanan is the important asymmetrical test case.
-- Royal Stewart is a famous symmetrical tartan with a larger registered pallet than the supplied threadcount uses.
-- MacLeod of Lewis provides a high-contrast yellow/red/black example.
-
-## Rendering all examples
+![Black Watch / Government tartan](assets/examples/black-watch-government.svg)
 
 ```bash
-for spec in examples/*.yaml; do
-  name=$(basename "$spec" .yaml)
-  tartan-maker render "$spec" -o "$name.svg"
-done
+tartan-maker render examples/black-watch-government.yaml -o black-watch-government.svg
 ```
 
-PNG output requires the optional `png` dependency:
+## Balmoral Original
+
+![Balmoral Original tartan](assets/examples/balmoral-original.svg)
 
 ```bash
-pip install -e ".[png]"
+tartan-maker render examples/balmoral-original.yaml -o balmoral-original.svg
 ```
+
+## Rob Roy MacGregor
+
+![Rob Roy MacGregor tartan](assets/examples/rob-roy-macgregor.svg)
+
+```bash
+tartan-maker render examples/rob-roy-macgregor.yaml -o rob-roy-macgregor.svg
+```
+
+## Buchanan
+
+![Buchanan tartan](assets/examples/buchanan.svg)
+
+Buchanan is the useful asymmetrical example: the full/direct repeat is encoded in order without pivot markers.
+
+```bash
+tartan-maker render examples/buchanan.yaml -o buchanan.svg
+```
+
+## Royal Stewart
+
+![Royal Stewart tartan](assets/examples/royal-stewart.svg)
+
+```bash
+tartan-maker render examples/royal-stewart.yaml -o royal-stewart.svg
+```
+
+## MacLeod of Lewis
+
+![MacLeod of Lewis tartan](assets/examples/macleod-of-lewis.svg)
+
+```bash
+tartan-maker render examples/macleod-of-lewis.yaml -o macleod-of-lewis.svg
+```
+
+## Summary
+
+| File | Sett type | Source |
+| --- | --- | --- |
+| `black-watch-government.yaml` | symmetrical | Scottish Register of Tartans ref. 277 |
+| `balmoral-original.yaml` | symmetrical | Scottish Register of Tartans ref. 182 |
+| `rob-roy-macgregor.yaml` | symmetrical | Scottish Register of Tartans ref. 3516 |
+| `buchanan.yaml` | asymmetrical | Scottish Register of Tartans ref. 414 |
+| `royal-stewart.yaml` | symmetrical | Scottish Register of Tartans ref. 3958 |
+| `macleod-of-lewis.yaml` | symmetrical | Scottish Register of Tartans ref. 2630 |
