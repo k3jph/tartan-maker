@@ -30,10 +30,10 @@ It is built around one rule: **SVG is the source of truth**. PNG output is gener
   <img src="assets/examples/royal-stewart.svg" alt="Royal Stewart tartan" width="30%">
 </p>
 
-## Quick example
+## Quick example (repository checkout)
 
 ```bash
-tartan-maker render examples/black-watch-government.yaml -o black-watch.svg
+tartan-maker render examples/black-watch.yaml -o black-watch.svg
 ```
 
 ```bash
