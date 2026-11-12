@@ -34,7 +34,7 @@ It is deliberately **SVG-first**: the package builds clean SVG from structured t
 
 ## Installation
 
-Requires Python 3.11 or newer. Install the CLI from PyPI:
+Requires Python 3.11 or newer. Install the CLI from PyPI. The required `spdlog` binding may need to compile from source when a suitable wheel is unavailable, so a C++ compiler may be needed:
 
 ```bash
 python -m pip install tartan-maker
