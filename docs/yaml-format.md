@@ -25,6 +25,24 @@ colors:
     srt:
       code: K
       name: BLACK
+  R:
+    name: Red
+    color: "#C80000"
+    srt:
+      code: R
+      name: RED
+  W:
+    name: White
+    color: "#E0E0E0"
+    srt:
+      code: W
+      name: WHITE
+  Y:
+    name: Yellow
+    color: "#E8C000"
+    srt:
+      code: Y
+      name: YELLOW
 
 sett: "B18 G46 K6 B18 K6 Y40 K6 Y40 K6 B18 K6 R40 W6 R40 K6 B18 K6 G46"
 
