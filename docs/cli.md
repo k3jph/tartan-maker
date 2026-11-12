@@ -16,12 +16,14 @@ Commands:
   normalize   Print a normalized YAML view of a tartan spec.
 ```
 
+Example paths below refer to a checkout of the [source repository](https://github.com/k3jph/tartan-maker); installed wheels do not ship the examples directory. For a standalone first-run example, see the [quick start](quickstart.md).
+
 ## `render`
 
 Render a YAML tartan spec to SVG or PNG.
 
 ```bash
-tartan-maker render examples/black-watch-government.yaml -o black-watch.svg
+tartan-maker render examples/black-watch.yaml -o black-watch.svg
 ```
 
 The output format is inferred from the output filename.

@@ -1,16 +1,18 @@
 # Changelog
 
-The canonical changelog lives at the repository root in `CHANGELOG.md`.
+The complete canonical changelog is maintained in
+[CHANGELOG.md](https://github.com/k3jph/tartan-maker/blob/main/CHANGELOG.md)
+at the repository root.
 
-For the documentation site, either keep this short pointer or periodically copy the release notes into this page before publishing a release.
+## 1.0.0 — 2026-11-11
 
-## 0.9.0
+The first stable release of the Python command-line package:
 
-Release-prep version with:
+- YAML-based symmetric and asymmetric tartan definitions and validation
+- Deterministic SVG-first rendering and optional PNG export
+- Scottish Register of Tartans-style pallet and threadcount export
+- PyPI packaging, verified installed-wheel smoke tests, and OIDC release automation
+- Corrected documentation and a standalone quickstart for pip users
 
-- normalized examples,
-- consolidated changelog,
-- polished README,
-- GitHub Actions CI,
-- MkDocs documentation,
-- GitHub Pages deployment support.
+The 1.0.0 release intentionally preserves the 0.9.1 rendering and specification
+semantics; see the root changelog for earlier revisions and implementation history.

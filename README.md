@@ -1,6 +1,6 @@
 # tartan-maker
 
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/k3jph/stops-el)
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/k3jph/tartan-maker)
 [![Homepage](https://jameshoward.us/assets/img/identity/jameshoward-homepage-shield.svg)](https://jameshoward.us)
 
 [![CI](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml/badge.svg)](https://github.com/k3jph/tartan-maker/actions/workflows/ci.yml)
@@ -34,30 +34,32 @@ It is deliberately **SVG-first**: the package builds clean SVG from structured t
 
 ## Installation
 
-For local development:
+Requires Python 3.11 or newer. Install the CLI from PyPI. The required `spdlog` binding may need to compile from source when a suitable wheel is unavailable, so a C++ compiler may be needed:
 
 ```bash
-pip install -e .
+python -m pip install tartan-maker
 ```
 
-For PNG export support:
+To enable PNG output as well as SVG:
 
 ```bash
-pip install -e ".[png]"
+python -m pip install "tartan-maker[png]"
 ```
 
-For development tools:
+Verify the installation:
 
 ```bash
-pip install -e ".[dev,png]"
+tartan-maker --version
 ```
+
+For development from a repository checkout, use `python -m pip install -e ".[dev,png]"`.
 
 ## Quick start
 
-Render one of the bundled examples:
+From a repository checkout, render one of the reference examples (the `examples/` directory is not installed with the CLI wheel):
 
 ```bash
-tartan-maker render examples/black-watch-government.yaml -o black-watch.svg
+tartan-maker render examples/black-watch.yaml -o black-watch.svg
 ```
 
 Render PNG instead:

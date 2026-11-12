@@ -9,7 +9,7 @@ These files are sample inputs for the parser, validator, renderer, and SRT expor
 ![Black Watch / Government tartan](assets/examples/black-watch-government.svg)
 
 ```bash
-tartan-maker render examples/black-watch-government.yaml -o black-watch-government.svg
+tartan-maker render examples/black-watch.yaml -o black-watch-government.svg
 ```
 
 ## Balmoral Original
@@ -17,7 +17,7 @@ tartan-maker render examples/black-watch-government.yaml -o black-watch-governme
 ![Balmoral Original tartan](assets/examples/balmoral-original.svg)
 
 ```bash
-tartan-maker render examples/balmoral-original.yaml -o balmoral-original.svg
+tartan-maker render examples/balmoral.yaml -o balmoral-original.svg
 ```
 
 ## Rob Roy MacGregor
@@ -58,8 +58,8 @@ tartan-maker render examples/macleod-of-lewis.yaml -o macleod-of-lewis.svg
 
 | File | Sett type | Source |
 | --- | --- | --- |
-| `black-watch-government.yaml` | symmetrical | Scottish Register of Tartans ref. 277 |
-| `balmoral-original.yaml` | symmetrical | Scottish Register of Tartans ref. 182 |
+| `black-watch.yaml` | symmetrical | Scottish Register of Tartans ref. 277 |
+| `balmoral.yaml` | symmetrical | Scottish Register of Tartans ref. 182 |
 | `rob-roy-macgregor.yaml` | symmetrical | Scottish Register of Tartans ref. 3516 |
 | `buchanan.yaml` | asymmetrical | Scottish Register of Tartans ref. 414 |
 | `royal-stewart.yaml` | symmetrical | Scottish Register of Tartans ref. 3958 |

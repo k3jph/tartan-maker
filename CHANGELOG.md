@@ -2,6 +2,18 @@
 
 All notable changes to `tartan-maker` are collected here.
 
+## 1.0.0 - 2026-11-11
+
+### Release
+
+- Declare the existing YAML specification, validation, symmetrical/asymmetrical sett expansion, Scottish Register text export, and SVG-first rendering interfaces ready for the first stable release.
+- Preserve optional PNG export through CairoSVG and explicit generator metadata in SVG/PNG outputs.
+- Add PyPI Trusted Publishing through GitHub Actions, a build-and-install smoke gate, and release instructions.
+- Correct outdated example paths in the README and documentation; document installation from PyPI and provide a self-contained first-run example.
+
+There are no intentional format or rendering changes from 0.9.1 in this release.
+
+
 ## 0.9.1 - 2026-06-20
 
 ### Added

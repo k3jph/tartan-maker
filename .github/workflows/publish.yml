@@ -1,0 +1,77 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Verify and build release distributions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify tag and distribution version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import pathlib
+          import tomllib
+
+          metadata = tomllib.loads(pathlib.Path("pyproject.toml").read_text(encoding="utf-8"))
+          version = metadata["project"]["version"]
+          source = pathlib.Path("src/tartan_maker/_version.py").read_text(encoding="utf-8")
+          expected = f'__version__ = "{version}"'
+          if expected not in source:
+              raise SystemExit("Source version and package metadata disagree")
+          if os.environ["RELEASE_TAG"] != f"v{version}":
+              raise SystemExit(f"Release tag must be v{version}")
+          PY
+
+      - name: Install build and validation tooling
+        run: python -m pip install --upgrade build twine
+
+      - name: Build wheel and source distribution
+        run: python -m build
+
+      - name: Check distribution metadata
+        run: python -m twine check --strict dist/*
+
+      - name: Upload verified distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: tartan-maker-distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish verified distributions to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/tartan-maker
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download verified distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: tartan-maker-distributions
+          path: dist/
+
+      - name: Publish with PyPI Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1

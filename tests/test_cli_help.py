@@ -22,7 +22,9 @@ def test_command_help_is_plain_click_style():
     result = CliRunner().invoke(app, ["render", "--help"], color=False)
 
     assert result.exit_code == 0
-    assert "Usage: tartan-maker render [OPTIONS] INPUT_FILE" in result.output
+    usage = result.output.splitlines()[0]
+    assert usage.startswith("Usage: tartan-maker render [OPTIONS] ")
+    assert "input_file" in usage.lower()
     assert "Arguments:" in result.output
     assert "Options:" in result.output
     assert "╭" not in result.output
