@@ -4,11 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tartan-maker"
-version = "0.9.1"
+version = "1.0.0"
 description = "Define, validate, render, and export tartan designs from YAML."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
   { name = "James Howard" }
 ]
@@ -17,7 +18,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -42,6 +42,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/k3jph/tartan-maker"
+Documentation = "https://k3jph.github.io/tartan-maker/"
 Repository = "https://github.com/k3jph/tartan-maker"
 Issues = "https://github.com/k3jph/tartan-maker/issues"
 
